@@ -1,0 +1,2 @@
+prestashop-hosted-module
+========================
