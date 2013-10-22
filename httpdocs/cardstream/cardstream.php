@@ -104,6 +104,7 @@ class cardstream extends PaymentModule
         $cardstreamparams['customerPhone'] = empty($invoiceAddress->phone) ? $invoiceAddress->phone_mobile : $invoiceAddress->phone;
 
         if (Configuration::get('CARDSTREAM_MERCHANT_PASSPHRASE')) {
+        	ksort($cardstreamparams);
             $sig_fields = http_build_query($cardstreamparams) . Configuration::get('CARDSTREAM_MERCHANT_PASSPHRASE');
             $cardstreamparams['signature'] = hash('SHA512', $sig_fields);
         }
