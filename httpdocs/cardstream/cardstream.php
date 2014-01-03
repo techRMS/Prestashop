@@ -83,12 +83,16 @@ class cardstream extends PaymentModule
         global $smarty;
 
         $invoiceAddress = new Address((int)$params['cart']->id_address_invoice);
-
+        
+	$currency = new Currency((int)($params['cart']->id_currency));
 
         $cardstreamparams = array();
         $cardstreamparams['merchantID'] = Configuration::get('CARDSTREAM_MERCHANT_ID');
         $cardstreamparams['merchantPwd'] = Configuration::get('CARDSTREAM_MERCHANT_PWD');
-        $cardstreamparams['currencyCode'] = Configuration::get('CARDSTREAM_CURRENCY_ID');
+        
+        //$cardstreamparams['currencyCode'] = Configuration::get('CARDSTREAM_CURRENCY_ID');
+        $cardstreamparams['currencyCode'] = is_numeric(Configuration::get('CARDSTREAM_CURRENCY_ID')) ? Configuration::get('CARDSTREAM_CURRENCY_ID') : $currency->iso_code_num;
+        
         $cardstreamparams['countryCode'] = Configuration::get('CARDSTREAM_COUNTRY_ID');
         $cardstreamparams['action'] = "SALE";
         $cardstreamparams['type'] = 1;
