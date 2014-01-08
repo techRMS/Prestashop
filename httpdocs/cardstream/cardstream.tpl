@@ -1,7 +1,6 @@
-
 <p class="payment_module" >
 
-	<form id="aut" name="charityclearform" action="https://gateway.cardstream.com/hosted/" method="post">
+	<form id="aut" name="cardstreamform" action="https://gateway.cardstream.com/hosted/" method="post">
 		<span style="display: block;padding: 0.6em;text-decoration: none;margin-left: 0.7em;">
 
 						<div id="aut2">
@@ -10,7 +9,7 @@
 					<input type="hidden" name="{$k}" value="{$v}" />
 				{/foreach}
 
-				<a href="javascript:document.charityclearform.submit();">{$frontend}</p>
+				<a href="javascript:document.cardstream.submit();">{$frontend}</p>
 			</div>
 		</span>
 	</form>
