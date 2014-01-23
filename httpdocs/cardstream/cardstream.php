@@ -6,7 +6,7 @@ class cardstream extends PaymentModule
     {
         $this->name = 'cardstream';
         $this->tab = 'payments_gateways';
-        $this->version = '1.0';
+        $this->version = '1.2';
         $this->author = 'CardStream';
 
         parent::__construct();
