@@ -103,7 +103,7 @@ class cardstream extends PaymentModule
         $cardstreamparams['redirectURL'] = Tools::getShopDomainSsl(true, true) . __PS_BASE_URI__ . "modules/" . $this->name . "/validation.php";
         $cardstreamparams['customerName'] = $invoiceAddress->firstname . ' ' . $invoiceAddress->lastname;
         $cardstreamparams['customerAddress'] = $invoiceAddress->address1 . "\n" . $invoiceAddress->address2 . "\n" . $invoiceAddress->city;
-        $cardstreamparams['customerPostCode'] = $invoiceAddress->postcode;
+        $cardstreamparams['customerPostcode'] = $invoiceAddress->postcode;
         $cardstreamparams['merchantData'] = "PrestaShop " . $this->name . ' ' . $this->version;
         $cardstreamparams['customerPhone'] = empty($invoiceAddress->phone) ? $invoiceAddress->phone_mobile : $invoiceAddress->phone;
 
