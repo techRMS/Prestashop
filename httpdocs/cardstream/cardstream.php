@@ -88,7 +88,7 @@ class cardstream extends PaymentModule
 
         $cardstreamparams = array();
         $cardstreamparams['merchantID'] = Configuration::get('CARDSTREAM_MERCHANT_ID');
-        $cardstreamparams['merchantPwd'] = Configuration::get('CARDSTREAM_MERCHANT_PWD');
+        //$cardstreamparams['merchantPwd'] = Configuration::get('CARDSTREAM_MERCHANT_PWD');
         
         //$cardstreamparams['currencyCode'] = Configuration::get('CARDSTREAM_CURRENCY_ID');
         $cardstreamparams['currencyCode'] = is_numeric(Configuration::get('CARDSTREAM_CURRENCY_ID')) ? Configuration::get('CARDSTREAM_CURRENCY_ID') : $currency->iso_code_num;
