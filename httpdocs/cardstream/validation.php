@@ -20,7 +20,7 @@ if (isset($_POST['signature'])) {
     $check = $_POST;
     unset($check['signature']);
     ksort($check);
-    $sig_check = ($_POST['signature'] == hash("SHA512", http_build_query($check) . Configuration::get('CHARITYCLEAR_MERCHANT_PASSPHRASE')));
+    $sig_check = ($_POST['signature'] == hash("SHA512", http_build_query($check, '', '&') . Configuration::get('CARDSTREAM_MERCHANT_PASSPHRASE')));
 }else{
     $sig_check = true;
 }
