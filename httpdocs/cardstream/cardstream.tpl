@@ -9,7 +9,7 @@
 					<input type="hidden" name="{$k}" value="{$v}" />
 				{/foreach}
 
-				<a href="javascript:document.cardstream.submit();">{$frontend}</p>
+				<a href="javascript:document.cardstreamform.submit();">{$frontend}</p>
 			</div>
 		</span>
 	</form>
