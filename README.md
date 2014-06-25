@@ -16,7 +16,7 @@ Cardstream row.
 **Step 3:**
 
 Click “Configure” below the cardstream module title and then click “Manage Hooks”
-from the above menu. Next, click “Transplant a module” top right of page. Select “Cardstream Hosted Form” from the Module dropdown then from the “Hook into” dropdown select “displayPayment” and click save, Next, repeat the previous transplant process, but this time select from the “Hook into” dropdown actionPaymentConfirmation.
+from the above menu. Next, click “Transplant a module” top right of page. Select “Cardstream Hosted Form” from the Module dropdown then from the “Hook into” dropdown select “displayPayment” and click save, Next, repeat the previous transplant process, but this time select from the “Hook into” dropdown displayPaymentConfirmation.
 
 ![prestashop display payment hook](/images/displayPaymentHook.png)
 
