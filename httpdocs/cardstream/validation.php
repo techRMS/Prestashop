@@ -25,7 +25,7 @@ if (isset($_POST['signature'])) {
     $sig_check = true;
 }
 
-if ($_POST['responseCode'] != 0 || !$sig_check){
+if ($_POST['responseCode'] != 0) {
 
 	$cardstream = new cardstream();
 	$cardstream->validateOrder((int)$cart->id, _PS_OS_ERROR_, $_POST['transactionUnique'], $cardstream->displayName, $message);
