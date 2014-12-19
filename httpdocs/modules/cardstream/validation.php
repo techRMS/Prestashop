@@ -19,8 +19,7 @@ $customer = new Customer($cart->id_customer);
 if (isset($_POST['signature'])) {
     $check = $_POST;
     unset($check['signature']);
-    ksort($check);
-    $sig_check = ($_POST['signature'] == hash("SHA512", http_build_query($check, '', '&') . Configuration::get('CARDSTREAM_MERCHANT_PASSPHRASE')));
+    $sig_check = ($_POST['signature'] == createSignature($check, Configuration::get('CARDSTREAM_MERCHANT_PASSPHRASE')));
 }else{
     $sig_check = true;
 }
@@ -47,3 +46,28 @@ if ($_POST['responseCode'] != 0 || !$sig_check){
 	Tools::redirect('order-confirmation.php?id_module='.(int)$cardstream->id.'&id_cart='.(int)$cart->id.'&key='.$customer->secure_key);
 }
 
+
+function createSignature(array $data, $key, $algo = null) {
+
+	if ($algo === null) {
+		$algo = 'SHA512';
+	}
+	
+	ksort($data);
+
+	// Create the URL encoded signature string
+	$ret = http_build_query($data, '', '&');
+
+	// Normalise all line endings (CRNL|NLCR|NL|CR) to just NL (%0A)
+	$ret = preg_replace('/%0D%0A|%0A%0D|%0A|%0D/i', '%0A', $ret);
+	
+	// Hash the signature string and the key together
+	$ret = hash($algo, $ret . $key);
+
+	// Prefix the algorithm if not the default
+	if ($algo !== 'SHA512') {
+		$ret = '{' . $algo . '}' . $ret;
+	}
+
+	return $ret;	
+}

@@ -107,10 +107,8 @@ class cardstream extends PaymentModule
         $cardstreamparams['merchantData'] = "PrestaShop " . $this->name . ' ' . $this->version;
         $cardstreamparams['customerPhone'] = empty($invoiceAddress->phone) ? $invoiceAddress->phone_mobile : $invoiceAddress->phone;
 
-        if (Configuration::get('CARDSTREAM_MERCHANT_PASSPHRASE')) {
-        	ksort($cardstreamparams);
-            $sig_fields = http_build_query($cardstreamparams) . Configuration::get('CARDSTREAM_MERCHANT_PASSPHRASE');
-            $cardstreamparams['signature'] = hash('SHA512', $sig_fields);
+        if (Configuration::get('CARDSTREAM_MERCHANT_PASSPHRASE')) {          
+            $cardstreamparams['signature'] = $this->createCardstreamSignature($cardstreamparams, Configuration::get('CARDSTREAM_MERCHANT_PASSPHRASE'));
         }
 
         $smarty->assign('p', $cardstreamparams);
@@ -127,6 +125,7 @@ class cardstream extends PaymentModule
 
     public function hookPaymentReturn($params)
     {
+
         if (!$this->active)
             return;
 
@@ -143,6 +142,32 @@ class cardstream extends PaymentModule
         }
         return $this->display(__FILE__, 'hookorderconfirmation.tpl');
     }
+    
+    
+    function createCardstreamSignature(array $data, $key, $algo = null) {
+
+		if ($algo === null) {
+			$algo = 'SHA512';
+		}
+		
+		ksort($data);
+	
+		// Create the URL encoded signature string
+		$ret = http_build_query($data, '', '&');
+	
+		// Normalise all line endings (CRNL|NLCR|NL|CR) to just NL (%0A)
+		$ret = preg_replace('/%0D%0A|%0A%0D|%0A|%0D/i', '%0A', $ret);
+		
+		// Hash the signature string and the key together
+		$ret = hash($algo, $ret . $key);
+	
+		// Prefix the algorithm if not the default
+		if ($algo !== 'SHA512') {
+			$ret = '{' . $algo . '}' . $ret;
+		}
+	
+		return $ret;	
+	}
 
 }
 
