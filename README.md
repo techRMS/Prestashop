@@ -14,14 +14,18 @@ are asked if you want to replace any existing files, click “Yes”.
 
 **Step 2:**
 
-Log in to the Admin area of PrestaShop, then from the top menu click Modules. Next,
-click the plus symbol for the row Payments and Gateways. Finally, click Install on the
-Cardstream row.
+Log in to the Admin area of PrestaShop, then from the left menu, click Modules. Next, from the 'Module List', select 'Payments and Gateways'. From the list, select Cardstream and click the green 'install' button on the right.
 
 **Step 3:**
 
-Click “Configure” below the cardstream module title and then click “Manage Hooks”
-from the above menu. Next, click “Transplant a module” top right of page. Select “Cardstream Hosted Form” from the Module dropdown then from the “Hook into” dropdown select “displayPayment” and click save, Next, repeat the previous transplant process, but this time select from the “Hook into” dropdown displayPaymentReturn.
+From here, enter your Merchant ID, Currency Code, Country ID and Passphrase. In the 'Frontend' box, enter a sentence asking your customer to pay with Cardstream, i.e. "Process payments with Cardstream". 
+NOTE: The Frontend box MUST be filled in for the module to work. Click Update Settings. 
+
+**Step 4:**
+
+Click 'Manage Hooks' from the top right of the page. Next, click “Transplant a module” on the top right of page. Make sure “Cardstream Hosted Form” is selected from the Module dropdown then from the “Hook into” dropdown select “displayPayment” and click save. Next, repeat the previous transplant process, but this time select from the “Hook into” dropdown displayPaymentReturn.
+
+Your payment link to Cardstream is now ready. 
 
 ![prestashop display payment hook](/images/cardstream-hook-1.png)
 
