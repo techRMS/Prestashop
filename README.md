@@ -1,7 +1,7 @@
 Compatibility
 =================================
 
-Compatible with Version 1.6.0.11
+Compatible with Version 1.5 and 1.6
 
 Hosted Form Module for PrestaShop
 =================================
