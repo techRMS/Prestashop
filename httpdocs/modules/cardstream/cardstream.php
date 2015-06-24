@@ -6,7 +6,7 @@ class cardstream extends PaymentModule
     {
         $this->name = 'cardstream';
         $this->tab = 'payments_gateways';
-        $this->version = '1.2';
+        $this->version = '1.3';
         $this->author = 'CardStream';
 
         parent::__construct();
@@ -106,6 +106,11 @@ class cardstream extends PaymentModule
         $cardstreamparams['customerPostcode'] = $invoiceAddress->postcode;
         $cardstreamparams['merchantData'] = "PrestaShop " . $this->name . ' ' . $this->version;
         $cardstreamparams['customerPhone'] = empty($invoiceAddress->phone) ? $invoiceAddress->phone_mobile : $invoiceAddress->phone;
+
+		// fix for prestashop CCC
+		foreach($cardstreamparams as $key => &$value){
+			$value = trim($value);
+		}
 
         if (Configuration::get('CARDSTREAM_MERCHANT_PASSPHRASE')) {          
             $cardstreamparams['signature'] = $this->createCardstreamSignature($cardstreamparams, Configuration::get('CARDSTREAM_MERCHANT_PASSPHRASE'));
