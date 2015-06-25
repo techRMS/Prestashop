@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <module>
-	<name>cardstream</name>
-	<displayName>CardStream Hosted Form</displayName>
-	<version>1.3</version>
-	<description>Process payments with CardStream</description>
-	<author>CardStream</author>
-	<tab>payments_gateways</tab>
-	<is_configurable>1</is_configurable>
-	<need_instance>1</need_instance>
+    <name>cardstream</name>
+    <displayName><![CDATA[CardStream Hosted Form]]></displayName>
+    <version><![CDATA[1.3]]></version>
+    <description><![CDATA[Process payments with CardStream]]></description>
+    <author>CardStream</author>
+    <tab>payments_gateways</tab>
+    <confirmUninstall>Are you sure you want to uninstall?</confirmUninstall>
+    <is_configurable>1</is_configurable>
+    <need_instance>1</need_instance>
 </module>
