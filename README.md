@@ -1,7 +1,7 @@
 Compatibility
 =================================
 
-Compatible with Version 1.5 and 1.6
+Compatible with Version 1.5 and 1.6 only
 
 Hosted Form Module for PrestaShop
 =================================
@@ -20,13 +20,3 @@ Log in to the Admin area of PrestaShop, then from the left menu, click Modules. 
 
 From here, enter your Merchant ID, Currency Code, Country ID and Passphrase. In the 'Frontend' box, enter a sentence asking your customer to pay with Cardstream, i.e. "Process payments with Cardstream". 
 NOTE: The Frontend box MUST be filled in for the module to work. Click Update Settings. 
-
-**Step 4:**
-
-Click 'Manage Hooks' from the top right of the page. Next, click “Transplant a module” on the top right of page. Make sure “Cardstream Hosted Form” is selected from the Module dropdown then from the “Hook into” dropdown select “displayPayment” and click save. Next, repeat the previous transplant process, but this time select from the “Hook into” dropdown displayPaymentReturn.
-
-Your payment link to Cardstream is now ready. 
-
-![prestashop display payment hook](/images/cardstream-hook-1.png)
-
-![prestashop action payment confirmation](/images/cardstream-hook-payment-2.png)
