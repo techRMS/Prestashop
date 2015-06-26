@@ -5,7 +5,7 @@ you can download and install the packaged version using: https://github.com/card
 Compatibility
 =================================
 
-Compatible with Version 1.5 and 1.6
+Compatible with Version 1.5 and below.
 
 Hosted Form Module for PrestaShop
 =================================
