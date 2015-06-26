@@ -1,28 +1,21 @@
 <?php
 /**
-* 2007-2014 PrestaShop
-*
-* NOTICE OF LICENSE
-*
-* This source file is subject to the Academic Free License (AFL 3.0)
-* that is bundled with this package in the file LICENSE.txt.
-* It is also available through the world-wide-web at this URL:
-* http://opensource.org/licenses/afl-3.0.php
-* If you did not receive a copy of the license and are unable to
-* obtain it through the world-wide-web, please send an email
-* to license@prestashop.com so we can send you a copy immediately.
-*
-* DISCLAIMER
-*
-* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
-* versions in the future. If you wish to customize PrestaShop for your
-* needs please refer to http://www.prestashop.com for more information.
-*
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
-*  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
-*/
+ * 2015 Cardstream
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ *  @author    Paul Lashbrook <support@cardstream.com>
+ *  @copyright 2015 Cardstream Ltd
+ *  @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
 
 /**
  * @since 1.5.0
@@ -30,6 +23,75 @@
 class CardstreamValidationModuleFrontController extends ModuleFrontController
 {
 
+    private $return_fields = array(
+        'merchantID'               => null,
+        'transactionID'            => null,
+        'previousID'               => null,
+        'responseCode'             => null,
+        'responseMessage'          => null,
+        'responseStatus'           => null,
+        'xref'                     => null,
+        'state'                    => null,
+        'timestamp'                => null,
+        'amountReceived'           => null,
+        'amountRefunded'           => null,
+        'authorisationCode'        => null,
+        'referralPhone'            => null,
+        'avscv2CheckEnabled'       => null,
+        'avscv2CheckRequired'      => null,
+        'avscv2ResponseCode'       => null,
+        'avscv2ResponseMessage'    => null,
+        'avscv2AuthEntity'         => null,
+        'cv2Check'                 => null,
+        'cv2CheckPref'             => null,
+        'addressCheck'             => null,
+        'addressCheckPref'         => null,
+        'postcodeCheck'            => null,
+        'postcodeCheckPref'        => null,
+        'cardCVVMandatory'         => null,
+        'cardNumberMask'           => null,
+        'cardType'                 => null,
+        'cardTypeCode'             => null,
+        'cardScheme'               => null,
+        'cardSchemeCode'           => null,
+        'cardIssuer'               => null,
+        'cardIssuerCountry'        => null,
+        'cardIssuerCountryCode'    => null,
+        'threeDSResponseCode'      => null,
+        'threeDSResponseMessage'   => null,
+        'threeDSEnabled'           => null,
+        'threeDSRequired'          => null,
+        'threeDSEnrolled'          => null,
+        'threeDSAuthenticated'     => null,
+        'threeDSPaReq'             => null,
+        'threeDSACSURL'            => null,
+        'threeDSECI'               => null,
+        'threeDSCAVV'              => null,
+        'threeDSCAVVAlgorithm'     => null,
+        'threeDSXID'               => null,
+        'threeDSMerchantPref'      => null,
+        'threeDSVETimestamp'       => null,
+        'threeDSCATimestamp'       => null,
+        'threeDSCheck'             => null,
+        'threeDSCheckPref'         => null,
+        'remoteAddress'            => null,
+        'notifyEmail'              => null,
+        'customerReceiptsRequired' => null,
+        // eReceipt details fields
+        'eReceiptsEnabled'         => null,
+        'eReceiptsRequired'        => null,
+        'eReceiptsStoreID'         => null,
+        'eReceiptsCustomerRef'     => null,
+        'eReceiptsReceiptRef'      => null,
+        'eReceiptsReceiptData'     => null,
+        'eReceiptsResponseCode'    => null,
+        'eReceiptsResponseMessage' => null,
+        // Merchant ID routing
+        'requestMerchantID'        => null,
+        'processMerchantID'        => null,
+
+
+    );
 
     public function postProcess()
     {
@@ -39,41 +101,66 @@ class CardstreamValidationModuleFrontController extends ModuleFrontController
         if (!Validate::isLoadedObject($cart)) {
             exit;
         }
+        $check = $_POST;
 
-        if (Tools::getValue('signature')) {
-            $check = $_POST;
+        /*foreach($this->return_fields as $key => $value){
+            if(Tools::getIsset($key)){
+                $check[$key] = Tools::getValue($key);
+            }elseif(isset($_POST[$key])){
+                var_dump($key);
+            }
+        }*/
 
-            unset( $check['signature'] );
-            $sig_check =
-                ( $_POST['signature'] ==
-                  $this->module->createCardstreamSignature($check, Configuration::get('CARDSTREAM_MERCHANT_PASSPHRASE')) );
-        } else {
-            $sig_check = true;
+
+        unset( $check['signature'] );
+        $sig_check =
+            ( Tools::getValue('signature') ==
+              $this->module->createCardstreamSignature($check, Configuration::get('CARDSTREAM_MERCHANT_PASSPHRASE')) );
+
+        if (!$sig_check) {
+            $this->module->validateOrder(
+                (int)$cart->id,
+                _PS_OS_ERROR_,
+                Tools::getValue('transactionUnique'),
+                $this->module->displayName,
+                $this->module->l('Payment Signature')
+            );
         }
 
-        if ($_POST['responseCode'] != 0 || !$sig_check) {
-
+        if (Tools::getValue('responseCode') != 0) {
 
             $this->module->validateOrder(
-                (int)$cart->id, _PS_OS_ERROR_, $_POST['transactionUnique'], $this->module->displayName,
+                (int)$cart->id,
+                _PS_OS_ERROR_,
+                Tools::getValue('transactionUnique'),
+                $this->module->displayName,
                 $this->module->l('Payment Error')
             );
 
         } else {
 
 
-
-            if ($_POST['amountReceived'] == number_format($cart->getOrderTotal(true, Cart::BOTH), 2, '', '')) {
+            if (Tools::getValue('amountReceived') == number_format($cart->getOrderTotal(true, Cart::BOTH), 2, '', '')) {
 
                 $this->module->validateOrder(
-                    (int)$cart->id, _PS_OS_PAYMENT_, ( $_POST['amountReceived'] / 100 ),
-                    $this->module->displayName, $this->module->l('Payment Accepted, signature matched processed via callback '), array(), null, false, $cart->secure_key
+                    (int)$cart->id,
+                    _PS_OS_PAYMENT_,
+                    ( Tools::getValue('amountReceived') / 100 ),
+                    $this->module->displayName,
+                    $this->module->l('Payment Accepted, signature matched processed via callback '),
+                    array(),
+                    null,
+                    false,
+                    $cart->secure_key
                 );
             } else {
 
                 $this->module->validateOrder(
-                    (int)$cart->id, _PS_OS_ERROR_, $_POST['transactionUnique'],
-                    $this->module->displayName, $this->module->l('Payment amount miss match')
+                    (int)$cart->id,
+                    _PS_OS_ERROR_,
+                    Tools::getValue('transactionUnique'),
+                    $this->module->displayName,
+                    $this->module->l('Payment amount miss match')
                 );
             }
 
@@ -108,5 +195,4 @@ class CardstreamValidationModuleFrontController extends ModuleFrontController
 
         return $ret;
     }
-
 }

@@ -1,6 +1,6 @@
 <?php
 /**
-* 2007-2014 PrestaShop
+* 2015 Cardstream
 *
 * NOTICE OF LICENSE
 *
@@ -12,23 +12,15 @@
 * obtain it through the world-wide-web, please send an email
 * to license@prestashop.com so we can send you a copy immediately.
 *
-* DISCLAIMER
-*
-* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
-* versions in the future. If you wish to customize PrestaShop for your
-* needs please refer to http://www.prestashop.com for more information.
-*
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
-*  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
+*  @author    Paul Lashbrook <support@cardstream.com>
+*  @copyright 2015 Cardstream Ltd
+*  @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 */
 
 /**
  * @since 1.5.0
  * @uses  ModuleFrontControllerCore
  */
-
 class CardstreamPaymentModuleFrontController extends ModuleFrontController
 {
     public $ssl = true;
@@ -39,7 +31,7 @@ class CardstreamPaymentModuleFrontController extends ModuleFrontController
     public function initContent()
     {
         $this->display_column_right = false;
-        $this->display_column_left = false;
+        $this->display_column_left  = false;
 
         parent::initContent();
 
@@ -61,19 +53,22 @@ class CardstreamPaymentModuleFrontController extends ModuleFrontController
             'transactionUnique' => (int)( $this->context->cart->id ) . '_' . date('YmdHis') . '_' .
                                    $this->context->cart->secure_key,
             'amount'            => number_format($this->context->cart->getOrderTotal(), 2, '', ''),
-           /* 'redirectURL'       =>
-                Tools::getShopDomainSsl(true, true) . __PS_BASE_URI__ . 'module/'.$this->module->name . '/return',*/
             'callbackURL'       =>
-                Tools::getShopDomainSsl(true, true) . __PS_BASE_URI__ . "module/" . $this->module->name .
-                "/validation",
+                 Tools::getShopDomainSsl(true, true) . __PS_BASE_URI__ . "module/" . $this->module->name .
+                 "/validation",
             'redirectURL'       =>
-                Tools::getShopDomainSsl(true, true) . __PS_BASE_URI__ . 'index.php?controller=order-confirmation&id_cart='.$this->context->cart->id.'&id_module='.$this->module->id.'&id_order='.$this->module->currentOrder.'&key='.$customer->secure_key,
+                 Tools::getShopDomainSsl(true, true) . __PS_BASE_URI__ .
+                 'index.php?controller=order-confirmation&id_cart='.
+                 $this->context->cart->id.'&id_module='.$this->module->id.'&id_order='.
+                 $this->module->currentOrder.'&key='.$customer->secure_key,
+
             'customerName'      => $invoiceAddress->firstname . ' ' . $invoiceAddress->lastname,
             'customerAddress'   => trim($invoiceAddress->address1) . "\n" . trim($invoiceAddress->address2) . "\n" .
                                    trim($invoiceAddress->city),
             'customerPostcode'  => $invoiceAddress->postcode,
             'merchantData'      => "PrestaShop " . $this->module->name . ' ' . $this->module->version,
-            'customerPhone'     => empty( $invoiceAddress->phone ) ? $invoiceAddress->phone_mobile : $invoiceAddress->phone
+            'customerPhone'     => empty( $invoiceAddress->phone ) ?
+                    $invoiceAddress->phone_mobile : $invoiceAddress->phone
         );
 
         // fix for prestashop CCC
