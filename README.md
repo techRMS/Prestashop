@@ -1,5 +1,7 @@
 Version 1.6 and Above please use: https://github.com/cardstream/prestashop-hosted-module/tree/1.6
 
+you can download and install the packaged version using: https://github.com/cardstream/prestashop-hosted-module/blob/1.6/cardstream.zip?raw=true
+
 Compatibility
 =================================
 
