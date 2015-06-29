@@ -1,13 +1,13 @@
 Version 1.4 and before
 =================================
 
-Project Code: [https://github.com/cardstream/prestashop-hosted-module/tree/1.4](GitHub Code)
+Project Code: [GitHub Code](https://github.com/cardstream/prestashop-hosted-module/tree/1.4)
 
-Downloadable: [https://github.com/cardstream/prestashop-hosted-module/blob/1.4/cardstream.zip?raw=true](Download Plugin Link)
+Downloadable: [Download Plugin Link](https://github.com/cardstream/prestashop-hosted-module/blob/1.4/cardstream.zip?raw=true)
 
 Version 1.5 and above
 =================================
 
-Project Code: [https://github.com/cardstream/prestashop-hosted-module/tree/1.6](GitHub Code)
+Project Code: [GitHub Code](https://github.com/cardstream/prestashop-hosted-module/tree/1.6)
 
-Downloadable: [https://github.com/cardstream/prestashop-hosted-module/blob/1.6/cardstream.zip?raw=true](Download Plugin Link)
+Downloadable: [Download Plugin Link](https://github.com/cardstream/prestashop-hosted-module/blob/1.6/cardstream.zip?raw=true)
