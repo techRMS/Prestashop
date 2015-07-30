@@ -103,15 +103,6 @@ class CardstreamValidationModuleFrontController extends ModuleFrontController
         }
         $check = $_POST;
 
-        /*foreach($this->return_fields as $key => $value){
-            if(Tools::getIsset($key)){
-                $check[$key] = Tools::getValue($key);
-            }elseif(isset($_POST[$key])){
-                var_dump($key);
-            }
-        }*/
-
-
         unset( $check['signature'] );
         $sig_check =
             ( Tools::getValue('signature') ==
@@ -125,6 +116,7 @@ class CardstreamValidationModuleFrontController extends ModuleFrontController
                 $this->module->displayName,
                 $this->module->l('Payment Signature')
             );
+            Tools::redirectLink(Tools::getShopDomainSsl(true, true) . __PS_BASE_URI__ .'index.php?controller=order-confirmation&id_cart='.$this->context->cart->id.'&id_module='.$this->module->id.'&id_order='.$this->module->currentOrder.'&key='.$customer->secure_key);
         }
 
         if (Tools::getValue('responseCode') != 0) {
@@ -136,6 +128,7 @@ class CardstreamValidationModuleFrontController extends ModuleFrontController
                 $this->module->displayName,
                 $this->module->l('Payment Error')
             );
+            Tools::redirectLink(Tools::getShopDomainSsl(true, true) . __PS_BASE_URI__ .'index.php?controller=order-confirmation&id_cart='.$this->context->cart->id.'&id_module='.$this->module->id.'&id_order='.$this->module->currentOrder.'&key='.$customer->secure_key);
 
         } else {
 
@@ -153,6 +146,7 @@ class CardstreamValidationModuleFrontController extends ModuleFrontController
                     false,
                     $cart->secure_key
                 );
+                Tools::redirectLink(Tools::getShopDomainSsl(true, true) . __PS_BASE_URI__ .'index.php?controller=order-confirmation&id_cart='.$this->context->cart->id.'&id_module='.$this->module->id.'&id_order='.$this->module->currentOrder.'&key='.$customer->secure_key);
             } else {
 
                 $this->module->validateOrder(
@@ -162,6 +156,7 @@ class CardstreamValidationModuleFrontController extends ModuleFrontController
                     $this->module->displayName,
                     $this->module->l('Payment amount miss match')
                 );
+                Tools::redirectLink(Tools::getShopDomainSsl(true, true) . __PS_BASE_URI__ .'index.php?controller=order-confirmation&id_cart='.$this->context->cart->id.'&id_module='.$this->module->id.'&id_order='.$this->module->currentOrder.'&key='.$customer->secure_key);
             }
 
         }

@@ -41,6 +41,8 @@ class CardstreamPaymentModuleFrontController extends ModuleFrontController
 
         $customer = new Customer($this->context->cart->id_customer);
 
+        $link = new Link();
+
         $form = array(
             'merchantID'        => Configuration::get('CARDSTREAM_MERCHANT_ID'),
             'currencyCode'      => is_numeric(Configuration::get('CARDSTREAM_CURRENCY_ID')) ? Configuration::get(
@@ -54,13 +56,9 @@ class CardstreamPaymentModuleFrontController extends ModuleFrontController
                                    $this->context->cart->secure_key,
             'amount'            => number_format($this->context->cart->getOrderTotal(), 2, '', ''),
             'callbackURL'       =>
-                 Tools::getShopDomainSsl(true, true) . __PS_BASE_URI__ . "module/" . $this->module->name .
-                 "/validation",
+                 $link->getModuleLink($this->module->name, 'validation'),
             'redirectURL'       =>
-                 Tools::getShopDomainSsl(true, true) . __PS_BASE_URI__ .
-                 'index.php?controller=order-confirmation&id_cart='.
-                 $this->context->cart->id.'&id_module='.$this->module->id.'&id_order='.
-                 $this->module->currentOrder.'&key='.$customer->secure_key,
+                 $link->getModuleLink($this->module->name, 'validation'),
 
             'customerName'      => $invoiceAddress->firstname . ' ' . $invoiceAddress->lastname,
             'customerAddress'   => trim($invoiceAddress->address1) . "\n" . trim($invoiceAddress->address2) . "\n" .
