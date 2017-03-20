@@ -95,15 +95,15 @@ class CardstreamValidationModuleFrontController extends ModuleFrontController
 
     public function postProcess()
     {
+	
+		$cart = $this->context->cart;
+      	if (!Validate::isLoadedObject($cart)){	
+			exit;
+		}
 
-
-        $cart = new Cart((int)Tools::getValue('orderRef'));
-        if (!Validate::isLoadedObject($cart)) {
-            exit;
-        }
         $check = $_POST;
-
-        unset( $check['signature'] );
+        
+	unset( $check['signature'] );
         $sig_check =
             ( Tools::getValue('signature') ==
               $this->module->createCardstreamSignature($check, Configuration::get('CARDSTREAM_MERCHANT_PASSPHRASE')) );
@@ -146,7 +146,7 @@ class CardstreamValidationModuleFrontController extends ModuleFrontController
                     false,
                     $cart->secure_key
                 );
-                Tools::redirectLink(Tools::getShopDomainSsl(true, true) . __PS_BASE_URI__ .'index.php?controller=order-confirmation&id_cart='.$this->context->cart->id.'&id_module='.$this->module->id.'&id_order='.$this->module->currentOrder.'&key='.$customer->secure_key);
+                Tools::redirectLink(Tools::getShopDomainSsl(true, true) . __PS_BASE_URI__ .'index.php?controller=order-confirmation&id_cart='.$this->context->cart->id.'&id_module='.$this->module->id.'&id_order='.$this->module->currentOrder.'&key='.$cart->secure_key);
             } else {
 
                 $this->module->validateOrder(
