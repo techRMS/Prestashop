@@ -5,7 +5,7 @@ Project Code: [GitHub Code](https://github.com/cardstream/prestashop-hosted-modu
 
 Downloadable: [Download Plugin Link](https://github.com/cardstream/prestashop-hosted-module/blob/1.4/cardstream.zip?raw=true)
 
-Version 1.5 and above
+Version 1.5 and 1.6
 =================================
 
 Project Code: [GitHub Code](https://github.com/cardstream/prestashop-hosted-module/tree/1.6)
