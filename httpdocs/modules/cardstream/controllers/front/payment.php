@@ -1,6 +1,6 @@
 <?php
 /**
-* 2015 Cardstream
+* 2018 Cardstream
 *
 * NOTICE OF LICENSE
 *
@@ -12,8 +12,8 @@
 * obtain it through the world-wide-web, please send an email
 * to license@prestashop.com so we can send you a copy immediately.
 *
-*  @author    Paul Lashbrook <support@cardstream.com>
-*  @copyright 2015 Cardstream Ltd
+*  @author    Matthew James <support@cardstream.com>
+*  @copyright 2018 Cardstream Ltd
 *  @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 */
 
@@ -21,78 +21,43 @@
  * @since 1.5.0
  * @uses  ModuleFrontControllerCore
  */
-class CardstreamPaymentModuleFrontController extends ModuleFrontController
-{
-    public $ssl = true;
+class CardstreamPaymentModuleFrontController extends ModuleFrontController {
+	//public $ssl = true;
+	//public $template = 'checkout/checkout-process.tpl';
+	public function init() {
+		parent::init();
+	}
 
-    /**
-     * @see FrontController::initContent()
-     */
-    public function initContent()
-    {
-        $this->display_column_right = false;
-        $this->display_column_left  = false;
+	/**
+	 * @see FrontController::initContent()
+	 */
+	public function initContent() {
 
-        parent::initContent();
+		//$this->display_column_right = false;
+		//$this->display_column_left  = false;
 
-        $invoiceAddress = new Address((int)$this->context->cart->id_address_invoice);
+		parent::initContent();
 
-        $currency = new Currency((int)( $this->context->cart->id_currency ));
+		if (Configuration::get('CARDSTREAM_INTEGRATION_TYPE') === 'direct') {
 
-        $customer = new Customer($this->context->cart->id_customer);
+			// Must send post data here otherwise we'd use Tools::getAllValues()
+			// which includes GET and POST data :(
+			$req = $this->module->generateDirectPaymentForm($this->context, $_POST);
 
-        $link = new Link();
+			$res = $this->module->makeRequest($this->module->gateway_url, $req);
 
-        $form = array(
-            'merchantID'        => Configuration::get('CARDSTREAM_MERCHANT_ID'),
-            'currencyCode'      => is_numeric(Configuration::get('CARDSTREAM_CURRENCY_ID')) ? Configuration::get(
-                'CARDSTREAM_CURRENCY_ID'
-            ) : $currency->iso_code_num,
-            'countryCode'       => Configuration::get('CARDSTREAM_COUNTRY_ID'),
-            'action'            => "SALE",
-            'type'              => 1,
-            'orderRef'          => $this->context->cart->id,
-            'transactionUnique' => (int)( $this->context->cart->id ) . '_' . date('YmdHis') . '_' .
-                                   $this->context->cart->secure_key,
-            'amount'            => number_format($this->context->cart->getOrderTotal(), 2, '', ''),
-            'callbackURL'       =>
-                 $link->getModuleLink($this->module->name, 'validation'),
-            'redirectURL'       =>
-                 $link->getModuleLink($this->module->name, 'validation'),
+			$this->module->validatePayment($this->context, $res);
+		} else {
+			$this->context->smarty->assign(array(
+				'iframe'               => Configuration::get('CARDSTREAM_INTEGRATION_TYPE') === 'iframe',
+				'frontend'             => Configuration::get('CARDSTREAM_FRONTEND'),
+				'url'                  => $this->module->gateway_url,
+				'this_path'            => $this->module->getPathUri(),
+				'this_path_ssl'        => Tools::getShopDomainSsl(true, true) . __PS_BASE_URI__ . 'modules/' . $this->module->name . '/',
+				'form'                 => $this->module->generateHostedPaymentForm($this->context),
+			));
 
-            'customerName'      => $invoiceAddress->firstname . ' ' . $invoiceAddress->lastname,
-            'customerAddress'   => trim($invoiceAddress->address1) . "\n" . trim($invoiceAddress->address2) . "\n" .
-                                   trim($invoiceAddress->city),
-            'customerPostcode'  => $invoiceAddress->postcode,
-            'merchantData'      => "PrestaShop " . $this->module->name . ' ' . $this->module->version,
-            'customerPhone'     => empty( $invoiceAddress->phone ) ?
-                    $invoiceAddress->phone_mobile : $invoiceAddress->phone
-        );
-
-        // fix for prestashop CCC
-        foreach ($form as &$value) {
-            $value = trim($value);
-        }
-
-        if (Configuration::get('CARDSTREAM_MERCHANT_PASSPHRASE')) {
-            $form['signature'] = $this->module->createCardstreamSignature(
-                $form,
-                Configuration::get('CARDSTREAM_MERCHANT_PASSPHRASE')
-            );
-        }
-
-
-        $this->context->smarty->assign(
-            array(
-                'p'                    => $form,
-                'frontend'             => Configuration::get('CARDSTREAM_FRONTEND'),
-                'this_path'            => $this->module->getPathUri(),
-                'this_path_cardstream' => $this->module->getPathUri(),
-                'this_path_ssl'        =>
-                    Tools::getShopDomainSsl(true, true) . __PS_BASE_URI__ . 'modules/' . $this->module->name . '/'
-            )
-        );
-
-        $this->setTemplate('form_render.tpl');
-    }
+			$this->setTemplate('module:cardstream/views/templates/front/hosted_payment.tpl');
+		}
+	}
 }
