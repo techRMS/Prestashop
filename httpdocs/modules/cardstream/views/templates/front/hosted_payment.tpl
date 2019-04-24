@@ -70,14 +70,10 @@
 </form>
 {if isset($iframe) && $iframe === true}
 <script>
-	// detects if jquery is loaded and adjusts the form for mobile devices
-	if (window.jQuery) {
-		$(function(){
-			if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
-				$('form#paymentgatewaymoduleform').append('<input type="hidden" name="formResponsive"  value="Y"/>');
-				$('#paymentgatewayframe').css({ height : '1300px', width : '50%'});
-			}
-		});
+	if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
+		var frame = document.getElementById('paymentgatewayframe');
+		frame.style.height = '1500px';
+		frame.style.width = '100%';
 	}
 	document.getElementById('paymentgatewaymoduleform').submit();
 	document.getElementById('paymentgatewaymoduleform').remove();
